@@ -1,16 +1,45 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #ffffff; /* Set background color to white */
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
 }
 
 #app {
   max-width: 600px;
-  margin: 0 auto;
+  margin: auto;
+  background: white;
   padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   text-align: center;
+}
+
+input[type="text"],
+select,
+input[type="date"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 
 .todo-list {
@@ -20,11 +49,41 @@ h1 {
 
 .todo-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .todo-item input[type="checkbox"] {
   margin-right: 10px;
+}
+
+.progress-bar {
+  background-color: #e0e0e0;
+  height: 20px;
+  width: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.progress-bar div {
+  background-color: #76c7c0;
+  height: 100%;
+  text-align: center;
+  color: white;
+  line-height: 20px;
+}
+
+.priority-high {
+  border-left: 5px solid red;
+}
+
+.priority-medium {
+  border-left: 5px solid orange;
+}
+
+.priority-normal {
+  border-left: 5px solid green;
 }
