@@ -8,21 +8,21 @@ function App() {
 
   const addTask = () => {
     if (newTask.trim()) {
-      setTasks([...tasks, { text: newTask, completed: false, priority: 'normal', dueDate: '' }]);
+      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false, priority: 'normal', dueDate: '' }]);
       setNewTask('');
     }
   };
 
-  const toggleComplete = (index) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, completed: !task.completed } : task
+  const toggleComplete = (id) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task
     );
     setTasks(updatedTasks);
   };
 
-  const deleteTask = (index) => {
-    setTasks(tasks.filter((_, i) => i !== index));
-    if (editingIndex === index) {
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
+    if (editingIndex !== null && tasks[editingIndex].id === id) {
       setEditingIndex(null);
     }
   };
@@ -73,9 +73,10 @@ function App() {
         <div style={{ width: `${calculateProgress()}%` }}>{Math.round(calculateProgress())}%</div>
       </div>
 
+      <h2>En cours</h2>
       <ul className="todo-list">
-        {tasks.map((task, index) => (
-          <li key={index} className={`todo-item ${getPriorityClass(task.priority)}`}>
+        {tasks.filter(task => !task.completed).map((task, index) => (
+          <li key={task.id} className={`todo-item ${getPriorityClass(task.priority)}`}>
             {editingIndex === index ? (
               <>
                 <input
@@ -103,14 +104,60 @@ function App() {
                 <input
                   type="checkbox"
                   checked={task.completed}
-                  onChange={() => toggleComplete(index)}
+                  onChange={() => toggleComplete(task.id)}
                 />
                 <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
                   {task.text} {task.dueDate && ` - Due: ${task.dueDate}`}
                 </span>
                 <div>
                   <button onClick={() => startEdit(index, task.text, task.priority, task.dueDate)}>Edit</button>
-                  <button onClick={() => deleteTask(index)}>Delete</button>
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
+                </div>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      <h2>Terminées</h2>
+      <ul className="todo-list">
+        {tasks.filter(task => task.completed).map((task, index) => (
+          <li key={task.id} className={`todo-item ${getPriorityClass(task.priority)}`}>
+            {editingIndex === index ? (
+              <>
+                <input
+                  type="text"
+                  value={editedTask.text}
+                  onChange={(e) => setEditedTask({ ...editedTask, text: e.target.value })}
+                />
+                <select
+                  value={editedTask.priority}
+                  onChange={(e) => setEditedTask({ ...editedTask, priority: e.target.value })}
+                >
+                  <option value="normal">Normal</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
+                <input
+                  type="date"
+                  value={editedTask.dueDate}
+                  onChange={(e) => setEditedTask({ ...editedTask, dueDate: e.target.value })}
+                />
+                <button onClick={() => saveEdit(index)}>Save</button>
+              </>
+            ) : (
+              <>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleComplete(task.id)}
+                />
+                <span style={{ textDecoration: task.completed ? 'line-through' : 'none' }}>
+                  {task.text} {task.dueDate && ` - Due: ${task.dueDate}`}
+                </span>
+                <div>
+                  <button onClick={() => startEdit(index, task.text, task.priority, task.dueDate)}>Edit</button>
+                  <button onClick={() => deleteTask(task.id)}>Delete</button>
                 </div>
               </>
             )}
